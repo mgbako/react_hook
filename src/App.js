@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import './App.css';
 
-function Todos({ todo, index }) {
-	return <div className="todo">{todo.text}</div>;
+function Todos({ todo, index, completeTodo, removeTodo }) {
+	return (
+		<div className="todo">
+			<span style={{ textDecoration: todo.isCompleted ? 'line-through' : '' }}>{todo.text}</span>
+			<button className="btn btn-sm btn-primary" onClick={() => completeTodo(index)}>
+				Complete
+			</button>
+			<button className="btn btn-sm btn-danger" onClick={() => removeTodo(index)}>
+				X
+			</button>
+		</div>
+	);
 }
 
 function TodoForm({ addTodo }) {
@@ -43,10 +53,24 @@ function App() {
 		setTodos(newTodo);
 	};
 
+	const completeTodo = (index) => {
+		const newTodos = [ ...todos ];
+		newTodos[index].isCompleted = !newTodos[index].isCompleted;
+		setTodos(newTodos);
+	};
+
+	const removeTodo = (index) => {
+		const newTodo = [ ...todos ];
+		newTodo.splice(index, 1);
+		setTodos(newTodo);
+	};
+
 	return (
 		<div className="app">
 			<div className="todo-list">
-				{todos.map((todo, index) => <Todos index={index} key={index} todo={todo} />)}
+				{todos.map((todo, index) => (
+					<Todos index={index} key={index} todo={todo} completeTodo={completeTodo} removeTodo={removeTodo} />
+				))}
 				<TodoForm addTodo={addTodo} />
 			</div>
 		</div>
